@@ -1,8 +1,7 @@
-/* eslint  no-undef:off  */
-// 빨간줄(error) 알림 끄기
+//browser === window;
 
-hello();
+// window.alert('안돼!');    
+//confirm('정말 이 페이지를 벗어나시겠습니까?');
+// prompt('너 이름이 뭐니?');
 
-const a = 10;
-
-console.log('안녕 자바스크립트!');
+console.log('');
