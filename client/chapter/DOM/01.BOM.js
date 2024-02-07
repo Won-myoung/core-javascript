@@ -39,6 +39,59 @@ const urlParams = new URLSearchParams(location.search);
 
 const { platform, userAgent, language, onLine, geolocation } = navigator;
 
+//promise  콜백 단순하게
+
+
+function getCoords(){
+
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition((data)=>{
+        if(data){
+          const { latitude:lat, longitude:long } = data.coords;
+          resolve({lat,long})
+        }else{
+          reject({message:'error!'})
+        }
+      })
+    })
+    
+  }
+
+/* function getCoords(success){
+
+    navigator.geolocation.getCurrentPosition((data)=>{
+        const {latitude:lat, longitude:long }= data.coords;
+
+        success({lat,long})
+
+    })
+
+} */
+
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then((stream)=>{
+    console.log( stream );
+
+    document.querySelector('#video').srcObject = stream
+
+})
+
+
+
+
+
+
+
+
+// getCoords((data)=>{
+//     console.log( data )
+// })
+
+
+
+
+
 
 /* Screen 객체 ----------------------------------------------------------- */
 

@@ -13,13 +13,6 @@ h1 {
   }
 
 
-  .first {
-    background-color: orange;
-  }
-
-
-
-
   .userCard {
     border: 1px solid black;
     padding: 2rem;
@@ -34,3 +27,49 @@ h1 {
       background-color: gray;
     }
   }
+
+
+  #idField.is-active{
+    background: red;
+  }
+
+
+
+
+
+  .ground{
+    width: 400px;
+    height: 300px;
+    border: 5px solid black;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    /* pointer-events: none; */
+  }
+
+
+  #ball{
+    pointer-events: none;
+    transition: transform 0.3s;
+  }
+
+  .emotion{
+    position: absolute;
+    pointer-events: none;
+  }
+
+  section{
+  background-color: orange;
+  padding: 2rem;
+
+  & article{
+    background-color: dodgerblue;
+    padding: 2rem;
+
+    & p {
+      background-color: hotpink;
+      padding: 2rem;
+    }
+  }
+}
