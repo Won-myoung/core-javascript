@@ -1,6 +1,5 @@
 import { getNode } from "./getNode.js";
 
-
 export function insertBefore(node,text){
   if(typeof node === 'string') node = getNode(node);
 
@@ -24,3 +23,6 @@ export function insertAfter(node,text){
 
   node.insertAdjacentHTML('afterend',text)
 }
+
+
+
