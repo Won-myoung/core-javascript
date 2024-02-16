@@ -11,7 +11,7 @@ memo('cube',()=> getNode('#cube'))
 
 
 let random;
-gsap.to(memo('cube'),{duration:1,rotationX:100,rotationY:-100,ease:'back(10)'});
+// gsap.to(memo('cube'),{duration:1,rotationX:100,rotationY:-100,ease:'back(10)'});
 
 
 export function diceAnimation (){
@@ -35,16 +35,3 @@ export function diceAnimation (){
   gsap.to(memo('cube'),{ease:'linear',duration:0.2,z:-100,rotationX:rotationValue[random][0],rotationY:rotationValue[random][1],onComplete:complete})
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
