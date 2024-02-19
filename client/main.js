@@ -1,160 +1,162 @@
-
-
 /* global gsap */
 
+
 import { 
-    tiger,
-    delayP,
-    insertLast,
-    changeColor,
-    getNode as $,
-    renderSpinner,
-    renderUserCard,
-    renderEmptyCard,
-    clearContents,
-  } from "./lib/index.js";
+  tiger, 
+  delayP,
+  insertLast, 
+  changeColor,
+  getNode as $,
+  renderSpinner,
+  clearContents, 
+  renderUserCard,
+  renderEmptyCard,
+} from './lib/index.js';
 
 
 
-const END_POINT = 'https://jsonplaceholder.typicode.com/users'
 
-const userCardInner = $('.user-card-inner')
+const END_POINT = 'http://localhost:3000/users'
 
-//확인                 // const userCardInner = getNode('.user-card-inner');
-
-//export * from './getNode.js';
+const userCardInner = $('.user-card-inner');
 
 
-//[phase-1]
+// [phase-1]
 // 1. user 데이터를 tiger 함수를 사용해 fetch 해주세요.
-//     -tiger.get()
+//    - tiger.get()
 
 // 2. 함수 안에 넣기 ( renderUserList )
-// 3. html, css 붙여넣기
+// 3. html,css 붙여넣기
 // 4. 유저 데이터를 화면에 렌더링
-//    - 유저 데이터(array) 순환하여 모든 아이템 뽑아내기 (forEach)
-//    - 템플릿 변수 만들기 (article)
-//    - template literal을 사용하여 데이터 집어넣기(보간: interpolation)
-//    - insertLast함수를 사용하여 화면에 렌더링하기
-
-
-
+//    - [✅] 유저 데이터(array) 순환하여 모든 아이템 뽑아내기 (forEach) 
+//    - [✅] 템플릿 변수 만들기 (article) 
+//    - [✅] template literal을 사용하여 데이터 집어넣기(보간 : interpolation) 
+//    - [✅] insertLast(어디에,무엇을)함수를 사용하여 화면에 렌더링하기 
+// 5. 함수 분리 
 
 async function renderUserList(){
-    
-    renderSpinner(userCardInner);
-
-    try{
-
-        await delayP()
-
-        // const spinner = $('.loadingSpinner');
 
 
-        gsap.to('.loadingSpinner',{
-            duration: 3,//기본값 0.5초
-            opacity:0,
-            onComplete(){
-                $('.loadingSpinner').remove()
-            }
-        })
-        // spinner.remove()
+  renderSpinner(userCardInner);
 
-        const response = await tiger.get(END_POINT);
+  try{
 
-        const userData = response.data;
+    await delayP();
 
-        userData.forEach((user)=>{
-        // console.log(user.website);
-
-        // user.name
-        
-
-        userData.forEach((user)=> renderUserCard('.user-card-inner',user))
-
-        changeColor('.user-card');
-
-        gsap.from('.user-card',{   // 무료
-            x: 100,
-            opacity:0,
-            stagger:0.1,
-        }/* option */)
-
+    gsap.to('.loadingSpinner',{
+      opacity:0,
+      onComplete(){
+        $('.loadingSpinner').remove()
+      }
     })
-}
-catch{
-
-    console.log('error!')
     
+    const response = await tiger.get(END_POINT);
+
+    const userData = response.data;
+  
+    userData.forEach(user => renderUserCard(userCardInner,user))
+  
+    changeColor('.user-card');
+  
+    gsap.from('.user-card',{
+      x: 100,
+      opacity:0,
+      stagger: 0.1,
+    })
+
+  }
+  catch{
     renderEmptyCard(userCardInner)
+  }
 }
-}
+
+
+
 
 renderUserList()
 
 
+// [phase-2]
+// 1. delete 통신 이후
+// 2. 기존 유저의 목록 제거
+// 3. 유저 목록 fetch 이후 다시 렌더링
+
 function handleDelete(e){
+
   const button = e.target.closest('button');
   const article = e.target.closest('article');
 
-  if( !article || !button ) return;
-  const id = article.dataset.index.slice(5) ;
+  if(!button) return;
 
-  
-  tiger.delete(`${END_POINT}/${id}`).then(()=>{
+  const id = article.dataset.index.slice(5)
 
-    clearContents(userCardInner)
-    renderUserList()
+  tiger.delete(`${END_POINT}/${id}`)
+  .then(()=>{
 
+    clearContents(userCardInner);
+    renderUserList();
+    
   })
-
-
 }
+
 
 userCardInner.addEventListener('click',handleDelete)
 
 
 
+            /* post 통신 */
+
+
+const createButton = $('.create')
+const cancelButton = $('.cancel')
+const doneButton = $('.done')
 
 
 
-const createButton = $('.create');
-const cancelButton = $('.cancel');
-const doneButton = $('.done');
-
-
-
-function handleCreate(){
-
-  gsap.to('.pop',{autoAlpha:1})
+const handleCreate = () => {
+  gsap.to('.pop',{autoAlpha:1});     
 }
 
-
-function handleCancel(e){
-  e.stopPropagation()
-  gsap.to('.pop',{autoAlpha:0})
+const handleCancel = (e) => {
+  e.stopPropagation();
+  gsap.to('.pop',{autoAlpha:0});     
 }
 
+const handleDone = (e) => {
+  e.preventDefault();  //html 태그 기본동작 차단
 
-function handleDone(e){
-  e.preventDefault() // html 태그의 기본 동작을 차단 
-  
-  const name = $('#nameField').value;
-  const email = $('#emailField').value;
-  const website = $('#siteField').value;
+  // name 값 가져오기
+  // email 값 가져오기
+  // website 값 가져오기
 
-  const obj = { name, email, website }
+  const name = $('#nameField').value
+  const email = $('#emailField').value
+  const website = $('#siteField').value
 
+  // post 통신
 
-  tiger.post(END_POINT,obj).then(()=>{
+  // -1. name,email,website 담고있는 객체를 생성
+  const obj = { name, email, website } //숏핸드
+
+  console.log(obj);
+  // -2. post 통신의 body에 객체 전달
+   tiger.post(END_POINT,obj).then(() =>{
+     
+    // -3. 유저 목록 지우기 (clearContents)
     clearContents(userCardInner)
-    renderUserList()
-    gsap.to('.pop',{autoAlpha:0})
 
+     // -4. 유저 목록 렌더링하기 (renderUserList)
+    renderUserList()
+     
+    // -5. 팝업창 닫기(gsap)
+    gsap.to('.pop',{autoAlpha:0});
   })
+
+
 }
 
 
-createButton.addEventListener('click',handleCreate)
-cancelButton.addEventListener('click',handleCancel)
-doneButton.addEventListener('click',handleDone)
+
+createButton.addEventListener('click',handleCreate);
+cancelButton.addEventListener('click',handleCancel);
+doneButton.addEventListener('click',handleDone);
